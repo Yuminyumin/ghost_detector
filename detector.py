@@ -11,6 +11,12 @@ def load_data_from_s3(bucket, key):
     data = obj['Body'].read().decode('utf-8')
     return pd.read_csv(StringIO(data))
 
+# # CSV 파일에서 데이터 불러오기
+# closed_school_df = pd.read_csv('closed_school.csv')
+# closed_house_df = pd.read_csv('closed_house.csv')
+# memorial_park_df = pd.read_csv('memorial_park.csv')
+# mortality_df = pd.read_csv('mortality.csv')
+
 # 예시: bucket_name과 file_name은 실제 값으로 바꿔야 함
 closed_school_df = load_data_from_s3(bucket_name, 'closed_school.csv')
 closed_house_df = load_data_from_s3(bucket_name, 'closed_house.csv')
