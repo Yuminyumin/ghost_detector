@@ -66,4 +66,4 @@ probability_percent=calculate_probability(final_merged_data, province, city, dis
 if isinstance(probability_percent,str):
    print(probability_percent)
 else:
-   print(f"귀신이 나타날 확률은 {probability_percent}%입니다.")
+   print(f"당신의 지역에 귀신이 존재 할 확률은 {probability_percent}%입니다.")
