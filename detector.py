@@ -4,10 +4,10 @@
 import pandas as pd
 
 # CSV 파일에서 데이터 불러오기
-closed_school_df =pd.read_csv('/Users/yuming/ghost_data/closed_school.csv')
-closed_house_df = pd.read_csv('/Users/yuming/ghost_data/closed_house.csv')
-memorial_park_df = pd.read_csv('/Users/yuming/ghost_data/memorial_park.csv')
-mortality_df = pd.read_csv('/Users/yuming/ghost_data/mortality.csv')
+closed_school_df =pd.read_csv('/Users/yuming/ghost_data/closed_school.csv',  encoding='cp949')
+closed_house_df = pd.read_csv('/Users/yuming/ghost_data/closed_house.csv',  encoding='cp949')
+memorial_park_df = pd.read_csv('/Users/yuming/ghost_data/memorial_park.csv',  encoding='cp949')
+mortality_df = pd.read_csv('/Users/yuming/ghost_data/mortality.csv',  encoding='cp949')
 
 # 각 데이터 셋에 카운트 열 추가
 closed_school_df['school_count'] = 1
