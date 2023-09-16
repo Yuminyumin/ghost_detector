@@ -1,28 +1,13 @@
 # 가정: closed_school_df, closed_house_df, memorial_park_df는 각각 폐교, 폐가, 추모공원 데이터셋을 담고 있는 DataFrame 객체
 # mortality_df는 사망률 데이터셋을 담고 있는 DataFrame 객체
-import boto3
+
 import pandas as pd
-from io import StringIO
 
-s3 = boto3.client('s3')
-
-def load_data_from_s3(bucket, key):
-    obj = s3.get_object(Bucket=bucket, Key=key)
-    data = obj['Body'].read().decode('utf-8')
-    return pd.read_csv(StringIO(data))
-
-# # CSV 파일에서 데이터 불러오기
-# closed_school_df = pd.read_csv('closed_school.csv')
-# closed_house_df = pd.read_csv('closed_house.csv')
-# memorial_park_df = pd.read_csv('memorial_park.csv')
-# mortality_df = pd.read_csv('mortality.csv')
-
-# 예시: bucket_name과 file_name은 실제 값으로 바꿔야 함
-closed_school_df = load_data_from_s3(bucket_name, 'closed_school.csv')
-closed_house_df = load_data_from_s3(bucket_name, 'closed_house.csv')
-memorial_park_df = load_data_from_s3(bucket_name, 'memorial_park.csv')
-mortality_df = load_data_from_s3(bucket_name, 'mortality.csv')
-
+# CSV 파일에서 데이터 불러오기
+closed_school_df =pd.read_csv('/Users/yuming/ghost_data/closed_school.csv')
+closed_house_df = pd.read_csv('/Users/yuming/ghost_data/closed_house.csv')
+memorial_park_df = pd.read_csv('/Users/yuming/ghost_data/memorial_park.csv')
+mortality_df = pd.read_csv('/Users/yuming/ghost_data/mortality.csv')
 
 # 각 데이터 셋에 카운트 열 추가
 closed_school_df['school_count'] = 1
@@ -50,6 +35,11 @@ mortality_avg = mortality_df.groupby('province')['die'].mean().reset_index()
 # 마지막으로 평균 사망률 데이터 셋 병합
 final_merged_data= pd.merge(merged_total,mortality_avg,on='province',how='inner')
 
+# 사용자로부터 지역 정보 입력 받기
+province = input("도를 입력하세요: ")
+city = input("시를 입력하세요: ")
+district = input("동을 입력하세요: ")
+
 def calculate_probability(df, province, city, district):
     # 해당 지역의 데이터 행 찾기
     row = df[(df['province'] == province) & (df['city'] == city) & (df['district'] == district)]
@@ -71,22 +61,5 @@ def calculate_probability(df, province, city, district):
     
     return probability_percent
 
-def lambda_handler(event, context):
-    province = event['province']
-    city = event['city']
-    district = event['district']
-
-    # calculate_probability 함수 호출
-    probability_percent = calculate_probability(final_merged_data , province , city , district)
-
-    # 결과 반환 (문자열 형태라면 오류 처리 필요)
-    if isinstance(probability_percent,str):
-        return {
-            'statusCode': 400,
-            'body': probability_percent
-        }
-    else:
-        return {
-            'statusCode': 200,
-            'body': f"귀신이 나타날 확률은 {probability_percent}%입니다."
-        }
+probability_percent= calculate_probability(final_merged_data, province, city, district)
+print(f"귀신이 나타날 확률은 {probability_percent}입니다.")
